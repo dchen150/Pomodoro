@@ -54,6 +54,7 @@ public class PomoTodoApp extends Application {
     // EFFECTS: Application starts here!
     @Override
     public void start(Stage primaryStage) throws Exception {
+        tasks = JsonFileIO.read();
         setPrimaryStage(primaryStage);
         setScene(new ListView(tasks));
     }
