@@ -113,7 +113,7 @@ public class TodobarController implements Initializable {
     // Inner class: view selector pop up controller
     class ViewOptionsPopUpController {
         @FXML
-        private JFXListView<?> viewPopUpList;
+        private JFXListView<?> viewPopUpList = new JFXListView<>();
 
         @FXML
         private void submit() {
@@ -138,7 +138,7 @@ public class TodobarController implements Initializable {
     // Inner class: option pop up controller
     class TodobarPopUpController {
         @FXML
-        private JFXListView<?> todobarPopUpList;
+        private JFXListView<?> todobarPopUpList = new JFXListView<>();
 
         @FXML
         private void submit() {
