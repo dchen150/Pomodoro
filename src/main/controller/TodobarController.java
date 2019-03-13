@@ -4,7 +4,6 @@ import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXPopup;
 import com.jfoenix.controls.JFXRippler;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +12,10 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import model.Task;
+import ui.EditTask;
+import ui.ListView;
+import ui.PomoTodoApp;
+import utility.JsonFileIO;
 import utility.Logger;
 
 import java.io.File;
@@ -113,23 +116,24 @@ public class TodobarController implements Initializable {
     // Inner class: view selector pop up controller
     class ViewOptionsPopUpController {
         @FXML
-        private JFXListView<?> viewPopUpList = new JFXListView<>();
+        private JFXListView<?> optionPopUpList;
 
         @FXML
         private void submit() {
-            int selectedIndex = viewPopUpList.getSelectionModel().getSelectedIndex();
+            int selectedIndex = optionPopUpList.getSelectionModel().getSelectedIndex();
             switch (selectedIndex) {
                 case 0:
-                    Logger.log("TodobarActionsPopUpController", "List View Selected");
+                    Logger.log("TodobarOptionsPopUpController", "Edit task has been selected");
+                    PomoTodoApp.setScene(new EditTask(task));
                     break;
                 case 1:
-                    Logger.log("TodobarActionsPopUpController", "Priority View is not supported in this version!");
-                    break;
-                case 2:
-                    Logger.log("TodobarActionsPopUpController", "Status View is not supported in this version!");
+                    Logger.log("TodobarOptionsPopUpController", "Task has been deleted");
+                    PomoTodoApp.getTasks().remove(task);
+                    JsonFileIO.write(PomoTodoApp.getTasks());
+                    PomoTodoApp.setScene(new ListView(PomoTodoApp.getTasks()));
                     break;
                 default:
-                    Logger.log("TodobarActionsPopUpController", "No action is implemented for the selected option");
+                    Logger.log("TodobarOptionsPopUpController", "No action is implemented for the selected option");
             }
             optionsPopUp.hide();
         }
@@ -138,21 +142,24 @@ public class TodobarController implements Initializable {
     // Inner class: option pop up controller
     class TodobarPopUpController {
         @FXML
-        private JFXListView<?> todobarPopUpList = new JFXListView<>();
+        private JFXListView<?> actionPopUpList;
 
         @FXML
         private void submit() {
-            int selectedIndex = todobarPopUpList.getSelectionModel().getSelectedIndex();
+            int selectedIndex = actionPopUpList.getSelectionModel().getSelectedIndex();
+            String s = "TodobarActionsPopUpController";
             switch (selectedIndex) {
-                case 0:
-                    Logger.log("TodobarOptionsPopUpController", "Setting is not supported in this version");
+                case 0: Logger.log(s, "To Do is not supported in this version");
                     break;
-                case 1:
-                    Logger.log("TodobarOptionsPopUpController", "Close application");
-                    Platform.exit();
+                case 1: Logger.log(s, "Up Next is not supported in this version");
                     break;
-                default:
-                    Logger.log("TodobarOptionsPopUpController", "No action is implemented for the selected option");
+                case 2: Logger.log(s, "In Progress is not supported in this version");
+                    break;
+                case 3: Logger.log(s, "Done is not supported in this version");
+                    break;
+                case 4: Logger.log(s, "Pomodoro! is not supported in this version");
+                    break;
+                default: Logger.log(s, "No action is implemented for the selected option");
             }
             actionPopUp.hide();
         }

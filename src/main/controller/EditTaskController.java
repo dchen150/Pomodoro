@@ -128,6 +128,7 @@ public class EditTaskController implements Initializable {
         savePriority();
         saveTags();
         Logger.log("EditTaskController", "Save task:\n" + task);
+        PomoTodoApp.setScene(new ListView(PomoTodoApp.getTasks()));
     }
     
     // REQUIRES: task != null
@@ -186,8 +187,7 @@ public class EditTaskController implements Initializable {
     @FXML
     public void cancelEditTask() {
         Logger.log("EditTaskController", "Edit Task cancelled.");
-        Logger.log("EditTaskController", "Close application");
-        Platform.exit();
+        PomoTodoApp.setScene(new ListView(PomoTodoApp.getTasks()));
     }
     
     @Override
