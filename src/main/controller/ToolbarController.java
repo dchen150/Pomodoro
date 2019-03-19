@@ -105,16 +105,16 @@ public class ToolbarController implements Initializable {
             int selectedIndex = viewPopUpList.getSelectionModel().getSelectedIndex();
             switch (selectedIndex) {
                 case 0:
-                    Logger.log("TodobarActionsPopUpController", "List View Selected");
+                    Logger.log("ToolbarActionsPopUpController", "List View Selected");
                     break;
                 case 1:
-                    Logger.log("TodobarActionsPopUpController", "Priority View is not supported in this version!");
+                    Logger.log("ToolbarActionsPopUpController", "Priority View is not supported in this version!");
                     break;
                 case 2:
-                    Logger.log("TodobarActionsPopUpController", "Status View is not supported in this version!");
+                    Logger.log("ToolbarActionsPopUpController", "Status View is not supported in this version!");
                     break;
                 default:
-                    Logger.log("TodobarActionsPopUpController", "No action is implemented for the selected option");
+                    Logger.log("ToolbarActionsPopUpController", "No action is implemented for the selected option");
             }
             viewPopUp.hide();
         }
@@ -130,14 +130,14 @@ public class ToolbarController implements Initializable {
             int selectedIndex = toolbarPopUpList.getSelectionModel().getSelectedIndex();
             switch (selectedIndex) {
                 case 0:
-                    Logger.log("TodobarOptionsPopUpController", "Setting is not supported in this version");
+                    Logger.log("ToolbarOptionsPopUpController", "Setting is not supported in this version");
                     break;
                 case 1:
-                    Logger.log("TodobarOptionsPopUpController", "Close application");
+                    Logger.log("ToolbarOptionsPopUpController", "Close application");
                     Platform.exit();
                     break;
                 default:
-                    Logger.log("TodobarOptionsPopUpController", "No action is implemented for the selected option");
+                    Logger.log("ToolbarOptionsPopUpController", "No action is implemented for the selected option");
             }
             toolbarPopUp.hide();
         }
