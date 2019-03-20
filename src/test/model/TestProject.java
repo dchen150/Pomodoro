@@ -35,6 +35,15 @@ public class TestProject {
             System.out.println("Caught expected EmptyStringException");
         }
     }
+    @Test
+    void testConstructorThrowEmptyStringExceptionNull() {
+        try {
+            new Project(null);
+            fail("No exception was thrown");
+        } catch (EmptyStringException e) {
+            System.out.println("Caught expected EmptyStringException");
+        }
+    }
 
     @Test
     void testAddThrowNullArgumentException() {
@@ -54,6 +63,13 @@ public class TestProject {
         } catch (NullArgumentException e) {
             System.out.println("Caught expected NullArgumentException");
         }
+    }
+
+    @Test
+    void testAddItselfToTasks() {
+        assertEquals(0, testProject.getNumberOfTasks());
+        testProject.add(testProject);
+        assertEquals(0, testProject.getNumberOfTasks());
     }
 
     @Test

@@ -6,6 +6,7 @@ import model.exceptions.NegativeInputException;
 import model.exceptions.NullArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sun.invoke.empty.Empty;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -30,6 +31,22 @@ public class TestTask {
                 + "\tTags: #cpsc210\n}", testTask.toString());
         assertEquals("Register for the course. ", testTask.getDescription());
         assertEquals(Status.IN_PROGRESS, testTask.getStatus());
+    }
+
+    @Test
+    void testConstsructorEmptyStringException() {
+        try {
+            Task t = new Task(null);
+            fail("Expected exception not thrown");
+        } catch (EmptyStringException e) {
+            System.out.println("Expected exception thrown");
+        }
+        try {
+            Task t1 = new Task("");
+            fail("Expected exception not thrown");
+        } catch (EmptyStringException e) {
+            System.out.println("Expected exception thrown");
+        }
     }
 
     @Test
@@ -291,6 +308,17 @@ public class TestTask {
     void testSetDescriptionThrowEmptyStringException() {
         try {
             testTask.setDescription("");
+            fail("Expected exception not thrown");
+        } catch (EmptyStringException e) {
+            System.out.println("Caught expected EmptyStringException");
+        }
+    }
+
+    @Test
+    void testSetDescriptionThrowEmptyStringExceptionNull() {
+        try {
+            testTask.setDescription(null);
+            fail("Expected exception not thrown");
         } catch (EmptyStringException e) {
             System.out.println("Caught expected EmptyStringException");
         }
@@ -315,6 +343,24 @@ public class TestTask {
         assertTrue(testTask2.equals(testTask));
         assertTrue(testTask2.equals(testTask2));
         assertFalse(testTask2.equals(new Tag("hello")));
+    }
+
+    @Test
+    void testTaskOverridenEqualsPart2() {
+        Task testTask2 = new Task("Hello, this is a description");
+        DueDate dueDate = new DueDate();
+        Priority p = new Priority();
+        p.setUrgent(true);
+
+        testTask2.setDueDate(dueDate);
+        testTask2.setPriority(p);
+        assertFalse(testTask2.equals(testTask));
+        assertTrue(testTask2.equals(testTask2));
+        assertFalse(testTask2.equals(new Tag("hello")));
+
+        testTask.setPriority(p);
+        testTask.setDueDate(dueDate);
+        assertTrue(testTask2.equals(testTask));
     }
 
     @Test
