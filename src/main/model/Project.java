@@ -4,12 +4,13 @@ import model.exceptions.EmptyStringException;
 import model.exceptions.NullArgumentException;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
 // Represents a Project, a collection of zero or more Tasks
 // Class Invariant: no duplicated task; order of tasks is preserved
-public class Project extends Todo {
+public class Project extends Todo implements Iterable<Todo> {
     private String description;
     private List<Todo> tasks;
     
@@ -73,13 +74,8 @@ public class Project extends Todo {
         int totalTasks = 0;
         if (tasks.size() > 0) {
             for (Todo td: tasks) {
-                if (td instanceof Project) {
-                    totalProgress += td.getProgress();
-                    totalTasks++;
-                } else {
-                    totalProgress += td.getProgress();
-                    totalTasks++;
-                }
+                totalProgress += td.getProgress();
+                totalTasks++;
             }
             return totalProgress / totalTasks;
         } else {
@@ -123,5 +119,87 @@ public class Project extends Todo {
     @Override
     public int hashCode() {
         return Objects.hash(description);
+    }
+
+    @Override
+    public Iterator<Todo> iterator() {
+        return new PrioritizedIterator();
+    }
+
+    private class PrioritizedIterator implements Iterator<Todo> {
+        Iterator<Todo> taskIterator = tasks.iterator();
+        Iterator<Todo> ti2 = tasks.iterator();
+        Iterator<Todo> ti3 = tasks.iterator();
+        Iterator<Todo> ti4 = tasks.iterator();
+        boolean finishedImpAndUrg = false;
+        boolean finishedImp = false;
+        boolean finishedUrg = false;
+
+        @Override
+        public boolean hasNext() {
+            return taskIterator.hasNext() || ti2.hasNext() || ti3.hasNext() || ti4.hasNext();
+        }
+
+        @Override
+        public Todo next() {
+            Todo td = null;
+            if (taskIterator.hasNext() && !finishedImpAndUrg) {
+                td = resultImpAndUrg();
+            }
+            if (td == null && !finishedImp) {
+                td = resultImp();
+            }
+            if (td == null && !finishedUrg) {
+                td = resultUrg();
+            }
+            if (td == null && finishedUrg && finishedImp && finishedImpAndUrg) {
+                td = resultDefault();
+            }
+            return td;
+        }
+
+        private Todo resultDefault() {
+            while (finishedUrg && finishedImp && finishedImpAndUrg) {
+                Todo td = ti4.next();
+                if (!td.getPriority().isImportant() && !td.getPriority().isUrgent()) {
+                    return td;
+                }
+            }
+            return null;
+        }
+
+        private Todo resultUrg() {
+            while (ti3.hasNext() && !finishedUrg) {
+                Todo td =  ti3.next();
+                if (td.getPriority().isUrgent() && !td.getPriority().isImportant()) {
+                    return td;
+                }
+            }
+            finishedUrg = true;
+            return null;
+        }
+
+        private Todo resultImp() {
+            while (ti2.hasNext() && !finishedImp) {
+                Todo td =  ti2.next();
+                if (td.getPriority().isImportant() && !td.getPriority().isUrgent()) {
+                    return td;
+                }
+            }
+            finishedImp = true;
+            return null;
+        }
+
+        private Todo resultImpAndUrg() {
+            while (taskIterator.hasNext()) {
+                Todo td =  taskIterator.next();
+                if (td.getPriority().isImportant() && td.getPriority().isUrgent()) {
+                    return td;
+                }
+            }
+            finishedImpAndUrg = true;
+            return null;
+        }
+
     }
 }

@@ -259,4 +259,35 @@ public class TestProject {
         assertTrue(testProject2.equals(testProject2));
         assertFalse(testProject2.equals(new Tag("hello")));
     }
+
+    @Test
+    void testMain() {
+        Task t1 = new Task("vibes");
+        Task t2 = new Task("the vibes");
+        Task t3 = new Task("you know");
+        Project p = new Project("asdlfkjasdf");
+        Task t4 = new Task("vibewers");
+        Priority p1 = new Priority();
+        p1.setUrgent(true);
+        p1.setImportant(true);
+        t4.setPriority(p1);
+        p.add(t3);
+        testProject.add(t4);
+        testProject.add(t1);
+        testProject.add(t2);
+        testProject.add(p);
+
+        ArrayList<Todo> comparisonList = new ArrayList<>();
+        comparisonList.add(t4);
+        comparisonList.add(t1);
+        comparisonList.add(t2);
+        comparisonList.add(p);
+
+        ArrayList<Todo> iteratedList = new ArrayList<>();
+
+        for (Todo td: testProject) {
+            iteratedList.add(td);
+        }
+        assertTrue(iteratedList.equals(comparisonList));
+    }
 }
