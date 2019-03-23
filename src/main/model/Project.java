@@ -131,19 +131,37 @@ public class Project extends Todo implements Iterable<Todo> {
         Iterator<Todo> ti2 = tasks.iterator();
         Iterator<Todo> ti3 = tasks.iterator();
         Iterator<Todo> ti4 = tasks.iterator();
+        Iterator<Todo> ti5 = tasks.iterator();
         boolean finishedImpAndUrg = false;
         boolean finishedImp = false;
         boolean finishedUrg = false;
 
+
         @Override
         public boolean hasNext() {
-            return taskIterator.hasNext() || ti2.hasNext() || ti3.hasNext() || ti4.hasNext();
+            if (taskIterator.hasNext() || ti2.hasNext() || ti3.hasNext()) {
+                return true;
+            }
+            if (ti4.hasNext() && checkDefault() != null) {
+                return true;
+            }
+            return false;
+        }
+
+        private Todo checkDefault() {
+            while (ti5.hasNext()) {
+                Todo td = ti5.next();
+                if (!td.getPriority().isImportant() && !td.getPriority().isUrgent()) {
+                    return td;
+                }
+            }
+            return null;
         }
 
         @Override
         public Todo next() {
             Todo td = null;
-            if (taskIterator.hasNext() && !finishedImpAndUrg) {
+            if (!finishedImpAndUrg) {
                 td = resultImpAndUrg();
             }
             if (td == null && !finishedImp) {
@@ -159,7 +177,7 @@ public class Project extends Todo implements Iterable<Todo> {
         }
 
         private Todo resultDefault() {
-            while (finishedUrg && finishedImp && finishedImpAndUrg) {
+            while (ti4.hasNext()) {
                 Todo td = ti4.next();
                 if (!td.getPriority().isImportant() && !td.getPriority().isUrgent()) {
                     return td;
