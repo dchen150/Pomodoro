@@ -358,7 +358,7 @@ public class TestProject {
         for (Todo td: testProject) {
             iteratedList.add(td);
         }
-//        assertTrue(comparisonList.equals(iteratedList));
+        assertTrue(comparisonList.equals(iteratedList));
 
     }
 }

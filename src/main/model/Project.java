@@ -3,10 +3,7 @@ package model;
 import model.exceptions.EmptyStringException;
 import model.exceptions.NullArgumentException;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 // Represents a Project, a collection of zero or more Tasks
 // Class Invariant: no duplicated task; order of tasks is preserved
@@ -148,7 +145,11 @@ public class Project extends Todo implements Iterable<Todo> {
             return false;
         }
 
+        // EFFECT: returns null if there are no tasks in the iteration that have default priority,
+        //         otherwise, returns an object, which lets the caller know that there is a default that still needs
+        //         to be checked
         private Todo checkDefault() {
+            positionIterator();
             while (ti5.hasNext()) {
                 Todo td = ti5.next();
                 if (!td.getPriority().isImportant() && !td.getPriority().isUrgent()) {
@@ -158,8 +159,20 @@ public class Project extends Todo implements Iterable<Todo> {
             return null;
         }
 
+        private void positionIterator() {
+            for (int i = 0; i < tasks.size() - 1; i++) {
+                Todo td = ti5.next();
+                if (!td.getPriority().isImportant() && !td.getPriority().isUrgent()) {
+                    break;
+                }
+            }
+        }
+
         @Override
         public Todo next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
             Todo td = null;
             if (!finishedImpAndUrg) {
                 td = resultImpAndUrg();
