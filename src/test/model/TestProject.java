@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -388,7 +389,17 @@ public class TestProject {
             iteratedList.add(td);
         }
         assertTrue(comparisonList.equals(iteratedList));
-
-
     }
+
+    @Test
+    void testNoSuchElementExceptionThrown() {
+        try{
+            testProject.iterator().next();
+            fail("Expected exception now thrown");
+        } catch (NoSuchElementException e) {
+            System.out.println("Expected exception caught");
+        }
+    }
+
+
 }
