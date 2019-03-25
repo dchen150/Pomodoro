@@ -124,113 +124,114 @@ public class Project extends Todo implements Iterable<Todo> {
     }
 
     private class PrioritizedIterator implements Iterator<Todo> {
-        Iterator<Todo> taskIterator = tasks.iterator();
+        Iterator<Todo> ti1 = tasks.iterator();
         Iterator<Todo> ti2 = tasks.iterator();
         Iterator<Todo> ti3 = tasks.iterator();
         Iterator<Todo> ti4 = tasks.iterator();
-        Iterator<Todo> ti5 = tasks.iterator();
+        int numImpAndUrg = 0;
+        int numImp = 0;
+        int numUrg = 0;
+        int numDef = 0;
+
+        int countImpAndUrg = 0;
+        int countImp = 0;
+        int countUrg = 0;
+        int countDef = 0;
+
         boolean finishedImpAndUrg = false;
         boolean finishedImp = false;
         boolean finishedUrg = false;
 
+        private PrioritizedIterator() {
+            count();
+        }
+
 
         @Override
         public boolean hasNext() {
-            if (taskIterator.hasNext() || ti2.hasNext() || ti3.hasNext()) {
-                return true;
-            }
-            if (ti4.hasNext() && checkDefault() != null) {
+            if (numImpAndUrg != countImpAndUrg || numImp != countImp || numUrg != countUrg || numDef != countDef) {
                 return true;
             }
             return false;
         }
 
-        // EFFECT: returns null if there are no tasks in the iteration that have default priority,
-        //         otherwise, returns an object, which lets the caller know that there is a default that still needs
-        //         to be checked
-        private Todo checkDefault() {
-            positionIterator();
-            while (ti5.hasNext()) {
-                Todo td = ti5.next();
-                if (!td.getPriority().isImportant() && !td.getPriority().isUrgent()) {
-                    return td;
+        private void count() {
+            for (int i = 0; i < tasks.size(); i++) {
+                if (tasks.get(i).getPriority().isImportant() && tasks.get(i).getPriority().isUrgent()) {
+                    countImpAndUrg++;
+                } else if (tasks.get(i).getPriority().isImportant() && !tasks.get(i).getPriority().isUrgent()) {
+                    countImp++;
+                } else if (!tasks.get(i).getPriority().isImportant() && tasks.get(i).getPriority().isUrgent()) {
+                    countUrg++;
+                } else if (!tasks.get(i).getPriority().isImportant() && !tasks.get(i).getPriority().isUrgent()) {
+                    countDef++;
                 }
             }
-            return null;
         }
 
-        private void positionIterator() {
-            for (int i = 0; i < tasks.size() - 1; i++) {
-                Todo td = ti5.next();
-                if (!td.getPriority().isImportant() && !td.getPriority().isUrgent()) {
-                    break;
-                }
-            }
-        }
 
         @Override
         public Todo next() {
-            if (!hasNext()) {
+            if (!this.hasNext()) {
                 throw new NoSuchElementException();
             }
             Todo td = null;
-            if (!finishedImpAndUrg) {
-                td = resultImpAndUrg();
-            }
-            if (td == null && !finishedImp) {
-                td = resultImp();
-            }
-            if (td == null && !finishedUrg) {
-                td = resultUrg();
-            }
-            if (td == null && finishedUrg && finishedImp && finishedImpAndUrg) {
-                td = resultDefault();
+            if (numImpAndUrg != countImpAndUrg) {
+                numImpAndUrg++;
+                td = findImpAndUrg();
+            } else if (numImp != countImp) {
+                numImp++;
+                td = findImp();
+            } else if (numUrg != countUrg) {
+                numUrg++;
+                td = findUrg();
+            } else if (numDef != countDef) {
+                numDef++;
+                td = findDef();
             }
             return td;
         }
 
-        private Todo resultDefault() {
+        private Todo findDef() {
             while (ti4.hasNext()) {
                 Todo td = ti4.next();
-                if (!td.getPriority().isImportant() && !td.getPriority().isUrgent()) {
+                if (!td.getPriority().isUrgent() && !td.getPriority().isImportant()) {
                     return td;
                 }
             }
             return null;
         }
 
-        private Todo resultUrg() {
-            while (ti3.hasNext() && !finishedUrg) {
-                Todo td =  ti3.next();
+        private Todo findUrg() {
+            while (ti3.hasNext()) {
+                Todo td = ti3.next();
                 if (td.getPriority().isUrgent() && !td.getPriority().isImportant()) {
                     return td;
                 }
             }
-            finishedUrg = true;
             return null;
         }
 
-        private Todo resultImp() {
-            while (ti2.hasNext() && !finishedImp) {
-                Todo td =  ti2.next();
-                if (td.getPriority().isImportant() && !td.getPriority().isUrgent()) {
+        private Todo findImp() {
+            while (ti2.hasNext()) {
+                Todo td = ti2.next();
+                if (!td.getPriority().isUrgent() && td.getPriority().isImportant()) {
                     return td;
                 }
             }
-            finishedImp = true;
             return null;
         }
 
-        private Todo resultImpAndUrg() {
-            while (taskIterator.hasNext()) {
-                Todo td =  taskIterator.next();
-                if (td.getPriority().isImportant() && td.getPriority().isUrgent()) {
+        private Todo findImpAndUrg() {
+            while (ti1.hasNext()) {
+                Todo td = ti1.next();
+                if (td.getPriority().isUrgent() && td.getPriority().isImportant()) {
                     return td;
                 }
             }
-            finishedImpAndUrg = true;
             return null;
         }
+
 
     }
 }

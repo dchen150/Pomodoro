@@ -359,6 +359,36 @@ public class TestProject {
             iteratedList.add(td);
         }
         assertTrue(comparisonList.equals(iteratedList));
+    }
+
+    @Test
+    void testMultipleImpAndUrgItemsPt2() {
+        Priority p = new Priority();
+        p.setImportant(true);
+        p.setUrgent(true);
+        Task t1 = new Task("t1");
+        Task t2 = new Task("t2");
+        Task t3 = new Task("t3");
+        t1.setPriority(p);
+        t2.setPriority(p);
+        t3.setPriority(p);
+        testProject.add(t1);
+        testProject.add(t2);
+        testProject.add(t3);
+
+        ArrayList<Todo> comparisonList = new ArrayList<>();
+
+        comparisonList.add(t1);
+        comparisonList.add(t2);
+        comparisonList.add(t3);
+
+        ArrayList<Todo> iteratedList = new ArrayList<>();
+
+        for (Todo td: testProject) {
+            iteratedList.add(td);
+        }
+        assertTrue(comparisonList.equals(iteratedList));
+
 
     }
 }
