@@ -138,10 +138,6 @@ public class Project extends Todo implements Iterable<Todo> {
         int countUrg = 0;
         int countDef = 0;
 
-        boolean finishedImpAndUrg = false;
-        boolean finishedImp = false;
-        boolean finishedUrg = false;
-
         private PrioritizedIterator() {
             count();
         }
