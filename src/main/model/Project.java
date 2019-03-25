@@ -145,10 +145,7 @@ public class Project extends Todo implements Iterable<Todo> {
 
         @Override
         public boolean hasNext() {
-            if (numImpAndUrg != countImpAndUrg || numImp != countImp || numUrg != countUrg || numDef != countDef) {
-                return true;
-            }
-            return false;
+            return numImpAndUrg != countImpAndUrg || numImp != countImp || numUrg != countUrg || numDef != countDef;
         }
 
         private void count() {
