@@ -2,7 +2,9 @@ package model;
 
 import model.exceptions.NullArgumentException;
 
-public abstract class Todo {
+import java.util.Observable;
+
+public abstract class Todo extends Observable {
     protected String description;
     protected int progress;
     protected int etcHours;  // Estimated Time To Complete

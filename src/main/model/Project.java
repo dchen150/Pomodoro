@@ -7,7 +7,7 @@ import java.util.*;
 
 // Represents a Project, a collection of zero or more Tasks
 // Class Invariant: no duplicated task; order of tasks is preserved
-public class Project extends Todo implements Iterable<Todo> {
+public class Project extends Todo implements Iterable<Todo>, Observer {
     private String description;
     private List<Todo> tasks;
     
@@ -30,6 +30,7 @@ public class Project extends Todo implements Iterable<Todo> {
     public void add(Todo task) {
         if (!contains(task) && task != this) {
             tasks.add(task);
+            task.addObserver(this);
         }
     }
     
@@ -49,11 +50,8 @@ public class Project extends Todo implements Iterable<Todo> {
 
     @Override
     public int getEstimatedTimeToComplete() {
-        int etc = 0;
-        for (Todo td: tasks) {
-            etc += td.getEstimatedTimeToComplete();
-        }
-        return etc;
+        return etcHours;
+
     }
 
     // EFFECTS: returns an unmodifiable list of tasks in this project.
@@ -123,6 +121,15 @@ public class Project extends Todo implements Iterable<Todo> {
         return new PrioritizedIterator();
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        int etc = 0;
+        for (Todo td: tasks) {
+            etc += td.getEstimatedTimeToComplete();
+        }
+        etcHours = etc;
+    }
+
     private class PrioritizedIterator implements Iterator<Todo> {
         Iterator<Todo> ti1 = tasks.iterator();
         Iterator<Todo> ti2 = tasks.iterator();
@@ -185,6 +192,7 @@ public class Project extends Todo implements Iterable<Todo> {
             return td;
         }
 
+        // EFFECT: iterates through tasks for default Todo
         private Todo findDef() {
             while (ti4.hasNext()) {
                 Todo td = ti4.next();
@@ -195,6 +203,7 @@ public class Project extends Todo implements Iterable<Todo> {
             return null;
         }
 
+        // EFFECT: iterates through tasks for urgent and not important Todo
         private Todo findUrg() {
             while (ti3.hasNext()) {
                 Todo td = ti3.next();
@@ -205,6 +214,7 @@ public class Project extends Todo implements Iterable<Todo> {
             return null;
         }
 
+        // EFFECT: iterates through tasks for important and not urgent Todo
         private Todo findImp() {
             while (ti2.hasNext()) {
                 Todo td = ti2.next();
@@ -215,6 +225,7 @@ public class Project extends Todo implements Iterable<Todo> {
             return null;
         }
 
+        // EFFECT: iterates through tasks for important and urgent Todo
         private Todo findImpAndUrg() {
             while (ti1.hasNext()) {
                 Todo td = ti1.next();

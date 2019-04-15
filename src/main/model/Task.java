@@ -121,6 +121,8 @@ public class Task extends Todo {
             throw new NegativeInputException("Cannot have a negative amount of hours");
         } else {
             etcHours = hours;
+            setChanged();
+            notifyObservers();
         }
     }
 
