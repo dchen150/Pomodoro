@@ -128,6 +128,8 @@ public class Project extends Todo implements Iterable<Todo>, Observer {
             etc += td.getEstimatedTimeToComplete();
         }
         etcHours = etc;
+        setChanged();
+        notifyObservers();
     }
 
     private class PrioritizedIterator implements Iterator<Todo> {

@@ -128,6 +128,7 @@ public class EditTaskController implements Initializable {
         saveStatus();
         savePriority();
         saveTags();
+        JsonFileIO.write(PomoTodoApp.getTasks());
         Logger.log("EditTaskController", "Save task:\n" + task);
         PomoTodoApp.setScene(new ListView(PomoTodoApp.getTasks()));
     }
